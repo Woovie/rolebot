@@ -13,17 +13,14 @@ async def on_ready():
     await update_status()
 
 async def update_status():
-    await client.change_presence(game=discord.Game(name='type !doorbell'))
+    await client.change_presence(game=discord.Game(name=f"type {config['command-settings']['prefix']}{config['command-settings']['helper']}"))
 
 @client.event
 async def on_message(message):
-    if message.content == '!bark':
-        await client.send_message(message.channel, '*woof*')
-    if message.content == '!bork':
-        await client.send_message(message.channel, '***bork***')
-    if message.content == '!doorbell':
-        await client.send_message(message.channel, '**W͏OOF ẂOOF̵ WƠOF ҉WOOF W̶OO͟F **')
+    for command in config['commands']:
+        if message.content == f"{config['command-settings']['prefix']}{command}":
+            await client.send_message(message.channel, config['commands'][command])
     for member in message.server.members:
-        if message.content == f"!{member.nick}":
+        if message.content == f"{config['command-settings']['prefix']}{member.nick}":
             await client.send_message(message.channel, f"<@{member.id}>")
 client.run(config['discord']['token'])
