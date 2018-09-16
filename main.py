@@ -5,6 +5,9 @@ import configparser
 config = configparser.ConfigParser()
 config.read('settings.ini')
 
+discordconf = configparser.ConfigParser()
+discordconf.read('discord-token.ini')
+
 client = discord.Client()
 
 @client.event
@@ -23,4 +26,5 @@ async def on_message(message):
     for member in message.server.members:
         if message.content == f"{config['command-settings']['prefix']}{member.nick}":
             await client.send_message(message.channel, f"<@{member.id}>")
-client.run(config['discord']['token'])
+
+client.run(discordconf['discord']['token'])
