@@ -20,9 +20,15 @@ async def update_status():
 
 @client.event
 async def on_message(message):
+    if message.content == f"{config['command-settings']['prefix']}{config['command-settings']['helper']}":#Embed
+        if len(config['commands']) > 0:
+            embed = discord.Embed(title="Available commands")
+            for command in config['commands']:
+                embed.add_field(name=command, value=f"```{config['commands'][command]}```", inline=False)
+            await client.send_message(message.channel, embed=embed)
     for command in config['commands']:
         if message.content == f"{config['command-settings']['prefix']}{command}":
-            await client.send_message(message.channel, config['commands'][command])
+            await client.send_message(message.channel, {config['commands'][command]})
     for member in message.server.members:
         if message.content == f"{config['command-settings']['prefix']}{member.nick}":
             await client.send_message(message.channel, f"<@{member.id}>")
