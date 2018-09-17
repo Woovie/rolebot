@@ -42,8 +42,8 @@ async def on_message(message):
                 embed.add_field(name=command, value=f"```{config['commands'][command]}```", inline=False)
             await client.send_message(message.channel, embed=embed)
     for command in config['commands']:
-        if message.content == f"{config['command-settings']['prefix']}{command}":
-            await client.send_message(message.channel, {config['commands'][command]})
+        if message.content.lower() == f"{config['command-settings']['prefix']}{command}":
+            await client.send_message(message.channel, config['commands'][command])
     for member in message.server.members:
         if message.content == f"{config['command-settings']['prefix']}{member.nick}":
             await client.send_message(message.channel, f"<@{member.id}>")
