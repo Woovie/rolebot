@@ -18,22 +18,10 @@ scheduler = asyncsched()
 
 client = discord.Client()
 
-tick = 0
-word = ["helo", "yes", "this", "is", "dog", f"type {config['command-settings']['prefix']}{config['command-settings']['helper']}"]
-
 @client.event
 async def on_ready():
     print('barkbot ready')
-    job = scheduler.add_job(random_status, 'interval', seconds=10)
-    scheduler.start()
-
-async def random_status():
-    global tick
-    await client.change_presence(game=discord.Game(name=f"{word[tick]}"))
-    if tick == len(word)-1:
-        tick = 0
-    else:
-        tick = tick+1
+    await client.change_presence(game=discord.Game(name=f"{config['command-settings']['botname']} | {config['command-settings']['prefix']}{config['command-settings']['helper']}"))
 
 @client.event
 async def on_message(message):
@@ -49,6 +37,7 @@ async def on_message(message):
     if message.content == f"{config['command-settings']['prefix']}{config['command-settings']['commands']}":
         if len(config['commands']) > 0:
             embed = discord.Embed(title="Available commands")
+            embed.set_footer(text=f"Bot by {config['command-settings']['author']}, source code at {config['command-settings']['source']}")
             for command in config['commands']:
                 embed.add_field(name=command, value=f"```{config['commands'][command]}```", inline=False)
             await client.send_message(message.channel, embed=embed)
