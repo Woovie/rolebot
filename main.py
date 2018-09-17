@@ -1,6 +1,10 @@
+#!/usr/bin/env python3.6
 import discord
 import asyncio
 import configparser
+import random
+import time
+from apscheduler.schedulers.asyncio import AsyncIOScheduler as asyncsched
 
 config = configparser.ConfigParser()
 config.read('settings.ini')
@@ -8,15 +12,26 @@ config.read('settings.ini')
 discordconf = configparser.ConfigParser()
 discordconf.read('discord-token.ini')
 
+scheduler = asyncsched()
+
 client = discord.Client()
+
+tick = 0
+word = ["helo", "yes", "this", "is", "dog", f"type {config['command-settings']['prefix']}{config['command-settings']['helper']}"]
 
 @client.event
 async def on_ready():
     print('barkbot ready')
-    await update_status()
+    job = scheduler.add_job(random_status, 'interval', seconds=10)
+    scheduler.start()
 
-async def update_status():
-    await client.change_presence(game=discord.Game(name=f"type {config['command-settings']['prefix']}{config['command-settings']['helper']}"))
+async def random_status():
+    global tick
+    await client.change_presence(game=discord.Game(name=f"{word[tick]}"))
+    if tick == len(word)-1:
+        tick = 0
+    else:
+        tick = tick+1
 
 @client.event
 async def on_message(message):
