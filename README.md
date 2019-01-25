@@ -1,2 +1,2 @@
-# barkbot
-A Discord bot for barking and other shenanigans
+# rolebot
+A Discord bot for role management
